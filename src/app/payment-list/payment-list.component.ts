@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaymentService } from '../services/payment.service';
-
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-payment-list',
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+  ],
   templateUrl: './payment-list.component.html',
   styleUrl: './payment-list.component.css'
 })
@@ -26,6 +31,9 @@ export class PaymentListComponent implements OnInit {
             .toLocaleDateString();
           payment["payee_due_date"] = new Date(payment["payee_due_date"])
             .toLocaleDateString();
+          payment["discount_percent"] = payment["discount_percent"].toFixed(2);
+          payment["tax_percent"] = payment["tax_percent"].toFixed(2);
+          payment["due_amount"] = payment["due_amount"].toFixed(2);
           payment["total_due"] = payment["total_due"].toFixed(2);
         });
         this.loading = false;

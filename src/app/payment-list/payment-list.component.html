@@ -1,7 +1,6 @@
 <div *ngIf="loading">Loading data...</div>
 <div *ngIf="error">{{error}}</div>
 <p *ngIf="paymentData.length === 0 && !loading && !error">No data available.</p>
-
 <table *ngIf="paymentData.length > 0">
   <thead>
     <tr>
@@ -21,6 +20,7 @@
       <th>Total Due</th>
       <th>Currency</th>
       <th>Payment Status</th>
+      <th>Action</th>
     </tr>
   </thead>
   <tbody>
@@ -41,6 +41,17 @@
       <td>{{payment['total_due']}}</td>
       <td>{{payment['currency']}}</td>
       <td>{{payment['payee_payment_status']}}</td>
+      <td>
+        <button title="Edit this payment" class="action-button" mat-mini-fab>
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button title="Delete this payment" class="action-button delete-button" mat-mini-fab>
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button title="View user profile" class="action-button profile-button" mat-mini-fab>
+          <mat-icon>account_box</mat-icon>
+        </button>
+      </td>
     </tr>
   </tbody>
 </table>
