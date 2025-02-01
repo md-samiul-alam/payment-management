@@ -1,15 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PaymentService } from '../services/payment.service';
 
-
-interface Payment {
-  id: string;
-  name: string;
-  age: number;
-  email: string;
-  city: string;
-  country: string;
-}
 
 @Component({
   selector: 'app-payment-list',
@@ -18,14 +10,34 @@ interface Payment {
   styleUrl: './payment-list.component.css'
 })
 export class PaymentListComponent implements OnInit {
-  paymentData: Payment[] = [
-    { id: '1', name: 'John Doe', age: 30, email: 'john.doe@example.com', city: 'New York', country: 'USA' },
-    { id: '2', name: 'Jane Smith', age: 25, email: 'jane.smith@example.com', city: 'London', country: 'UK' },
-    { id: '3', name: 'Peter Jones', age: 40, email: 'peter.jones@example.com', city: 'Paris', country: 'France' },
-  ];
+  loading: boolean = true;
+  error: boolean = true;
+
+  paymentData: any[] = [];
+
+  constructor(private paymentService: PaymentService) { }
 
   ngOnInit() {
-
+    this.paymentService.getData().subscribe({
+      next: (data) => {
+        this.paymentData = data;
+        this.paymentData.forEach(payment => {
+          payment["payee_added_date_utc"] = new Date(payment["payee_added_date_utc"]["_Timestamp__inc"] * 1000)
+            .toLocaleDateString();
+          payment["payee_due_date"] = new Date(payment["payee_due_date"])
+            .toLocaleDateString();
+          payment["total_due"] = payment["total_due"].toFixed(2);
+        });
+        this.loading = false;
+        this.error = false;
+      },
+      error: (error) => {
+        this.loading = false;
+        this.error = error.message;
+        this.paymentData = [];
+        console.error('Error fetching data:', error);
+      }
+    });
   }
 
   applyFilters() {
@@ -38,12 +50,12 @@ export class PaymentListComponent implements OnInit {
     console.log("Create new payment clicked");
   }
 
-  editPayment(payment: Payment) {
+  editPayment(payment: any) {
     // Implement edit payment logic here
     console.log("Edit payment clicked for ID:", payment.id);
   }
 
-  deletePayment(payment: Payment) {
+  deletePayment(payment: any) {
     // Implement delete payment logic here
     console.log("Delete payment clicked for ID:", payment.id);
   }

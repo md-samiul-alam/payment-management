@@ -1,20 +1,46 @@
+<div *ngIf="loading">Loading data...</div>
+<div *ngIf="error">{{error}}</div>
+<p *ngIf="paymentData.length === 0 && !loading && !error">No data available.</p>
+
 <table *ngIf="paymentData.length > 0">
   <thead>
     <tr>
       <th>Name</th>
-      <th>Age</th>
       <th>Email</th>
+      <th>Phone Number</th>
+      <th>Address</th>
       <th>City</th>
+      <th>Province/State</th>
+      <th>Postal/Zip Code</th>
       <th>Country</th>
+      <th>Added Date</th>
+      <th>Due Date</th>
+      <th>Due Amount</th>
+      <th>Discount</th>
+      <th>Tax</th>
+      <th>Total Due</th>
+      <th>Currency</th>
+      <th>Payment Status</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let payment of paymentData">
-      <td data-label="Name">{{ payment.name }}</td>
-      <td data-label="Age">{{ payment.age }}</td>
-      <td data-label="Email">{{ payment.email }}</td>
-      <td data-label="City">{{ payment.city }}</td>
-      <td data-label="Country">{{ payment.country }}</td>
+      <td>{{payment['payee_last_name']}}, {{payment['payee_first_name']}}</td>
+      <td>{{payment['payee_email']}}</td>
+      <td>{{payment['payee_phone_number']}}</td>
+      <td>{{payment['payee_address_line_1']}}, {{payment['payee_address_line_2']}}</td>
+      <td>{{payment['payee_city']}}</td>
+      <td>{{payment['payee_province_or_state']}}</td>
+      <td>{{payment['payee_postal_code']}}</td>
+      <td>{{payment['payee_country']}}</td>
+      <td>{{payment['payee_added_date_utc']}}</td>
+      <td>{{payment['payee_due_date']}}</td>
+      <td>{{payment['discount_percent']}}</td>
+      <td>{{payment['tax_percent']}}</td>
+      <td>{{payment['due_amount']}}</td>
+      <td>{{payment['total_due']}}</td>
+      <td>{{payment['currency']}}</td>
+      <td>{{payment['payee_payment_status']}}</td>
     </tr>
   </tbody>
 </table>
