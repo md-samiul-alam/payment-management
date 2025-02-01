@@ -1,0 +1,85 @@
+body {
+  font-family: sans-serif;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  /* Adds some spacing below the table */
+  overflow-x: auto;
+  /* Enables horizontal scrolling if needed */
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  /* Default text alignment */
+  white-space: nowrap;
+  /* Prevents text from wrapping in cells (adjust as needed) */
+  overflow: hidden;
+  /* Hides overflowing text */
+  text-overflow: ellipsis;
+  /* Adds ellipsis (...) for overflow */
+}
+
+th {
+  background-color: #f2f2f2;
+  /* Light gray background for header */
+  font-weight: bold;
+}
+
+/* Basic responsiveness - stack table cells vertically on smaller screens */
+@media screen and (max-width: 600px) {
+  table {
+    display: block;
+    /* Makes the table behave like a block element */
+    overflow-x: auto;
+    /* Enable horizontal scrolling if needed */
+  }
+
+  thead {
+    display: none;
+    /* Hide the table header */
+  }
+
+  tr {
+    border-bottom: 1px solid #ddd;
+    /* Add borders between rows */
+    display: block;
+    /* Makes each row a block element */
+  }
+
+  td {
+    border: none;
+    /* Remove cell borders */
+    padding-left: 50%;
+    /* Add left padding for labels */
+    position: relative;
+    /* Needed for positioning the pseudo-element */
+    white-space: normal;
+    /* Allow text wrapping */
+  }
+
+  td:before {
+    /* Create labels from the header text */
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 45%;
+    /* Adjust width as needed */
+    padding-right: 10px;
+    white-space: nowrap;
+    content: attr(data-label);
+    /* Get the data-label attribute value */
+    font-weight: bold;
+  }
+}
+
+
+/* Example styling for alternating rows */
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}

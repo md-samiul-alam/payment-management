@@ -1,0 +1,22 @@
+<table *ngIf="paymentData.length > 0">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Email</th>
+      <th>City</th>
+      <th>Country</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let payment of paymentData">
+      <td data-label="Name">{{ payment.name }}</td>
+      <td data-label="Age">{{ payment.age }}</td>
+      <td data-label="Email">{{ payment.email }}</td>
+      <td data-label="City">{{ payment.city }}</td>
+      <td data-label="Country">{{ payment.country }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<p *ngIf="paymentData.length === 0">No data available.</p>
