@@ -1,0 +1,6 @@
+.confirmation-button {
+  margin: 5px;
+  background-color: #efefef;
+  color: black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
