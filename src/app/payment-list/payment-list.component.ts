@@ -11,7 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatRippleModule } from '@angular/material/core';
-
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 import { ViewUserDialogComponent } from '../view-user-dialog/view-user-dialog.component';
 
@@ -29,6 +29,7 @@ import { ViewUserDialogComponent } from '../view-user-dialog/view-user-dialog.co
     MatInputModule,
     MatDatepickerModule,
     MatRippleModule,
+    MatPaginator,
   ],
   templateUrl: './payment-list.component.html',
   styleUrl: './payment-list.component.css'
@@ -51,23 +52,21 @@ export class PaymentListComponent implements OnInit {
     'action'
   ];
 
+  paginationLength = 100;
+  pageSize = 5;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+
   paymentData: any[] = [];
 
   constructor(private paymentService: PaymentService, public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.paymentService.getPaymentData().subscribe({
-      next: (data) => {
-        this.paymentData = data;
+    this.paymentService.getPaymentData(this.pageSize, 0).subscribe({
+      next: (data: any) => {
+        this.paginationLength = data.count;
+        this.paymentData = data.payments;
         this.paymentData.forEach(payment => {
-          payment["payee_added_date_utc"] = new Date(payment["payee_added_date_utc"]["_Timestamp__inc"] * 1000)
-            .toLocaleDateString();
-          payment["payee_due_date"] = new Date(payment["payee_due_date"])
-            .toLocaleDateString();
-          payment["discount_percent"] = payment["discount_percent"].toFixed(2);
-          payment["tax_percent"] = payment["tax_percent"].toFixed(2);
-          payment["due_amount"] = payment["due_amount"].toFixed(2);
-          payment["total_due"] = payment["total_due"].toFixed(2);
+          payment = this.sanitizePaymentObj(payment);
         });
       },
       error: (error) => {
@@ -80,14 +79,7 @@ export class PaymentListComponent implements OnInit {
   viewUserProfile(payment: any) {
     this.paymentService.getPaymentDataById(payment["_id"]).subscribe({
       next: (payment: any) => {
-        payment["payee_added_date_utc"] = new Date(payment["payee_added_date_utc"]["_Timestamp__inc"] * 1000)
-          .toLocaleDateString();
-        payment["payee_due_date"] = new Date(payment["payee_due_date"])
-          .toLocaleDateString();
-        payment["discount_percent"] = payment["discount_percent"].toFixed(2);
-        payment["tax_percent"] = payment["tax_percent"].toFixed(2);
-        payment["due_amount"] = payment["due_amount"].toFixed(2);
-        payment["total_due"] = payment["total_due"].toFixed(2);
+        payment = this.sanitizePaymentObj(payment);
 
         this.dialog.open(ViewUserDialogComponent, {
           width: '500px',
@@ -99,7 +91,36 @@ export class PaymentListComponent implements OnInit {
         console.error("Error fetching data:", error);
       }
     });
-    console.log("View user profile clicked");
+  }
+
+  onPageChange(event: PageEvent) {
+    const startIndex = event.pageIndex * event.pageSize;
+    this.pageSize = event.pageSize
+    this.paymentService.getPaymentData(this.pageSize, startIndex).subscribe({
+      next: (data: any) => {
+        this.paginationLength = data.count;
+        this.paymentData = data.payments;
+        this.paymentData.forEach(payment => {
+          payment = this.sanitizePaymentObj(payment);
+        });
+      },
+      error: (error) => {
+        this.paymentData = [];
+        console.error("Error fetching data:", error);
+      }
+    });
+  }
+
+  sanitizePaymentObj(payment: any) {
+    payment["payee_added_date_utc"] = new Date(payment["payee_added_date_utc"]["_Timestamp__inc"] * 1000)
+      .toLocaleDateString();
+    payment["payee_due_date"] = new Date(payment["payee_due_date"])
+      .toLocaleDateString();
+    payment["discount_percent"] = payment["discount_percent"].toFixed(2);
+    payment["tax_percent"] = payment["tax_percent"].toFixed(2);
+    payment["due_amount"] = payment["due_amount"].toFixed(2);
+    payment["total_due"] = payment["total_due"].toFixed(2);
+    return payment;
   }
 
   applyFilters() {

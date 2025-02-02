@@ -7,29 +7,29 @@ import { catchError, tap, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiDomain: string = 'http://localhost:8000';
+  private apiDomain: string = "http://localhost:8000";
 
   constructor(private http: HttpClient) { }
 
-  getPaymentData(): Observable<any[]> {
-    let route = '/payment?limit=20&skip=20';
+  getPaymentData(limit: number, skip: number): Observable<any[]> {
+    let route = `/payment?limit=${limit}&skip=${skip}`;
     let finalUrl = this.apiDomain + route;
     return this.http.get<any[]>(finalUrl);
   }
 
   getPaymentDataById(id: string): Observable<any[]> {
-    let route = '/payment/' + id;
+    let route = "/payment/" + id;
     let finalUrl = this.apiDomain + route;
     return this.http.get<any[]>(finalUrl);
   }
 
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
-      console.error('An error occurred:', error.message);
+      console.error("An error occurred:", error.message);
     } else {
       console.error(
         `Backend returned code ${error.status}, body was: `, error.error);
     }
-    return throwError(() => new Error('Something bad happened; please try again later.'));
+    return throwError(() => new Error("Something bad happened; please try again later."));
   }
 }
