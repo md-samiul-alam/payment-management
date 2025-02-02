@@ -1,0 +1,13 @@
+.mat-toolbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.payment-list-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+}
+
+.table-container {
+  width: 90%;
+}

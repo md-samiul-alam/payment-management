@@ -1,0 +1,49 @@
+<div class="user-details">
+  <div class="user-section">
+    <h2>User Information</h2>
+    <div class="detail-row">
+      <label>First Name:</label>
+      <span>{{ user['payee_first_name'] }}</span>
+    </div>
+    <div class="detail-row">
+      <label>Last Name:</label>
+      <span>{{ user['payee_last_name'] }}</span>
+    </div>
+    <div class="detail-row">
+      <label>Phone Number:</label>
+      <span>{{ user['payee_phone_number'] }}</span>
+    </div>
+    <div class="detail-row">
+      <label>Email:</label>
+      <span>{{ user['payee_email'] }}</span>
+    </div>
+  </div>
+
+  <div class="address-section">
+    <h2>Address</h2>
+    <div class="detail-row">
+      <label>Address Line 1:</label>
+      <span>{{ user['payee_address_line_1'] }}</span>
+    </div>
+    <div class="detail-row">
+      <label>Address Line 2:</label>
+      <span>{{ user['payee_address_line_2'] }}</span>
+    </div>
+    <div class="detail-row">
+      <label>City:</label>
+      <span>{{ user['payee_city'] }}</span>
+    </div>
+    <div class="detail-row">
+      <label>Province/State:</label>
+      <span>{{ user['payee_province_or_state'] }}</span>
+    </div>
+    <div class="detail-row">
+      <label>Postal Code:</label>
+      <span>{{ user['payee_postal_code'] }}</span>
+    </div>
+    <div class="detail-row">
+      <label>Country:</label>
+      <span>{{ user['payee_country'] }}</span>
+    </div>
+  </div>
+</div>

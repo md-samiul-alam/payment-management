@@ -1,0 +1,30 @@
+.filter-container {
+  margin: 1em;
+}
+
+::ng-deep .mat-calendar {
+  background-color: white;
+}
+
+.form-container mat-form-field {
+  margin: 2px
+}
+
+.search-button {
+  background: #eaeaea;
+  border-radius: 4px;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.action-button {
+  margin: 1ex;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+}
+
+.delete-button {
+  color: red;
+}
