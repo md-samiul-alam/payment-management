@@ -1,10 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaymentService } from '../services/payment.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatRippleModule } from '@angular/material/core';
+
+
 import { ViewUserDialogComponent } from '../view-user-dialog/view-user-dialog.component';
 
 
@@ -15,14 +23,18 @@ import { ViewUserDialogComponent } from '../view-user-dialog/view-user-dialog.co
     MatTableModule,
     MatIconModule,
     MatButtonModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatRippleModule,
   ],
   templateUrl: './payment-list.component.html',
   styleUrl: './payment-list.component.css'
 })
 export class PaymentListComponent implements OnInit {
-  loading: boolean = true;
-  error: boolean = true;
-
+  readonly panelOpenState = signal(false);
   displayedColumns: string[] = [
     'view-profile',
     'name',
@@ -57,12 +69,8 @@ export class PaymentListComponent implements OnInit {
           payment["due_amount"] = payment["due_amount"].toFixed(2);
           payment["total_due"] = payment["total_due"].toFixed(2);
         });
-        this.loading = false;
-        this.error = false;
       },
       error: (error) => {
-        this.loading = false;
-        this.error = error.message;
         this.paymentData = [];
         console.error("Error fetching data:", error);
       }
@@ -87,8 +95,6 @@ export class PaymentListComponent implements OnInit {
         });
       },
       error: (error: any) => {
-        this.loading = false;
-        this.error = error.message;
         this.paymentData = [];
         console.error("Error fetching data:", error);
       }
