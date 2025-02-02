@@ -1,49 +1,82 @@
-<div *ngIf="loading">Loading data...</div>
-<div *ngIf="error">{{ error }}</div>
-<p *ngIf="paymentData.length === 0 && !loading && !error">No data available.</p>
-<table *ngIf="paymentData.length > 0">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Phone Number</th>
-      <th>Added Date</th>
-      <th>Due Date</th>
-      <th>Due Amount</th>
-      <th>Discount</th>
-      <th>Tax</th>
-      <th>Total Due</th>
-      <th>Currency</th>
-      <th>Payment Status</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let payment of paymentData">
-      <td>{{ payment['payee_last_name'] }}, {{ payment['payee_first_name'] }}</td>
-      <td>{{ payment['payee_email'] }}</td>
-      <td>{{ payment['payee_phone_number'] }}</td>
-      <td>{{ payment['payee_added_date_utc'] }}</td>
-      <td>{{ payment['payee_due_date'] }}</td>
-      <td>{{ payment['discount_percent'] }}</td>
-      <td>{{ payment['tax_percent'] }}</td>
-      <td>{{ payment['due_amount'] }}</td>
-      <td>{{ payment['total_due'] }}</td>
-      <td>{{ payment['currency'] }}</td>
-      <td>{{ payment['payee_payment_status'] }}</td>
-      <td>
-        <button title="Edit this payment" class="action-button" mat-mini-fab (click)="editPayment(payment)">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button title="Delete this payment" class="action-button delete-button" mat-mini-fab
-          (click)="editPayment(payment)">
-          <mat-icon>delete</mat-icon>
-        </button>
-        <button title="View user profile" class="action-button profile-button" mat-mini-fab
-          (click)="viewUserProfile(payment)">
-          <mat-icon>account_box</mat-icon>
-        </button>
-      </td>
-    </tr>
-  </tbody>
+<table mat-table [dataSource]="paymentData" class="mat-elevation-z8">
+  <ng-container matColumnDef="view-profile">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let payment">
+      <button title="View user profile" class="action-button profile-button" mat-mini-fab
+        (click)="viewUserProfile(payment)">
+        <mat-icon>account_box</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let payment"> {{ payment['payee_first_name'] }}, {{ payment['payee_last_name'] }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef> Email </th>
+    <td mat-cell *matCellDef="let payment"> {{ payment['payee_email'] }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="phone">
+    <th mat-header-cell *matHeaderCellDef> Phone</th>
+    <td mat-cell *matCellDef="let payment"> {{ payment['payee_phone_number'] }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="added-date">
+    <th mat-header-cell *matHeaderCellDef> Added Date </th>
+    <td mat-cell *matCellDef="let payment"> {{ payment['payee_added_date_utc'] }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="due-date">
+    <th mat-header-cell *matHeaderCellDef> Due Date </th>
+    <td mat-cell *matCellDef="let payment"> {{ payment['payee_due_date'] }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="due-amount">
+    <th mat-header-cell *matHeaderCellDef> Due Amount </th>
+    <td mat-cell *matCellDef="let payment"> {{ payment['due_amount'] }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="discount">
+    <th mat-header-cell *matHeaderCellDef> Discount </th>
+    <td mat-cell *matCellDef="let payment"> {{ payment['discount_percent'] }}% </td>
+  </ng-container>
+
+  <ng-container matColumnDef="tax">
+    <th mat-header-cell *matHeaderCellDef> Tax </th>
+    <td mat-cell *matCellDef="let payment"> {{ payment['tax_percent'] }}% </td>
+  </ng-container>
+
+  <ng-container matColumnDef="total-due">
+    <th mat-header-cell *matHeaderCellDef> Total Due </th>
+    <td mat-cell *matCellDef="let payment"> {{ payment['total_due'] }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="currency">
+    <th mat-header-cell *matHeaderCellDef> Currency </th>
+    <td mat-cell *matCellDef="let payment"> {{ payment['currency'] }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="payment-status">
+    <th mat-header-cell *matHeaderCellDef> Payment Status </th>
+    <td mat-cell *matCellDef="let payment"> {{ payment['payee_payment_status'] }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef> </th>
+    <td mat-cell *matCellDef="let payment">
+      <button title="Edit this payment" class="action-button" mat-mini-fab (click)="editPayment(payment)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button title="Delete this payment" class="action-button delete-button" mat-mini-fab
+        (click)="editPayment(payment)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container> -->
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>

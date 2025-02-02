@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaymentService } from '../services/payment.service';
+import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewUserDialogComponent } from '../view-user-dialog/view-user-dialog.component';
 
+
 @Component({
   selector: 'app-payment-list',
   imports: [
     CommonModule,
+    MatTableModule,
     MatIconModule,
     MatButtonModule,
   ],
@@ -19,6 +22,22 @@ import { ViewUserDialogComponent } from '../view-user-dialog/view-user-dialog.co
 export class PaymentListComponent implements OnInit {
   loading: boolean = true;
   error: boolean = true;
+
+  displayedColumns: string[] = [
+    'view-profile',
+    'name',
+    'email',
+    'phone',
+    'added-date',
+    'due-date',
+    'due-amount',
+    'discount',
+    'tax',
+    'total-due',
+    'currency',
+    'payment-status',
+    'action'
+  ];
 
   paymentData: any[] = [];
 
