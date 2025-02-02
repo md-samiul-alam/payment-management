@@ -1,5 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { PaymentService } from '../services/payment.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,13 +13,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatRippleModule } from '@angular/material/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { ViewUserDialogComponent } from '../view-user-dialog/view-user-dialog.component';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 
 @Component({
   selector: 'app-payment-list',
   imports: [
+    FormsModule,
     CommonModule,
     MatTableModule,
     MatIconModule,
@@ -30,6 +34,7 @@ import { ViewUserDialogComponent } from '../view-user-dialog/view-user-dialog.co
     MatDatepickerModule,
     MatRippleModule,
     MatPaginator,
+    MatSnackBarModule,
   ],
   templateUrl: './payment-list.component.html',
   styleUrl: './payment-list.component.css'
@@ -53,27 +58,21 @@ export class PaymentListComponent implements OnInit {
   ];
 
   paginationLength = 100;
+  startIndex = 0;
   pageSize = 5;
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
   paymentData: any[] = [];
+  firstName: any;
 
-  constructor(private paymentService: PaymentService, public dialog: MatDialog) { }
+  constructor(
+    private paymentService: PaymentService,
+    public dialog: MatDialog,
+    public snackbar: MatSnackBar,
+  ) { }
 
   ngOnInit() {
-    this.paymentService.getPaymentData(this.pageSize, 0).subscribe({
-      next: (data: any) => {
-        this.paginationLength = data.count;
-        this.paymentData = data.payments;
-        this.paymentData.forEach(payment => {
-          payment = this.sanitizePaymentObj(payment);
-        });
-      },
-      error: (error) => {
-        this.paymentData = [];
-        console.error("Error fetching data:", error);
-      }
-    });
+    this.fetchPaymentList();
   }
 
   viewUserProfile(payment: any) {
@@ -94,9 +93,13 @@ export class PaymentListComponent implements OnInit {
   }
 
   onPageChange(event: PageEvent) {
-    const startIndex = event.pageIndex * event.pageSize;
+    this.startIndex = event.pageIndex * event.pageSize;
     this.pageSize = event.pageSize
-    this.paymentService.getPaymentData(this.pageSize, startIndex).subscribe({
+    this.fetchPaymentList();
+  }
+
+  fetchPaymentList() {
+    this.paymentService.getPaymentData(this.pageSize, this.startIndex).subscribe({
       next: (data: any) => {
         this.paginationLength = data.count;
         this.paymentData = data.payments;
@@ -134,13 +137,42 @@ export class PaymentListComponent implements OnInit {
   }
 
   editPayment(payment: any) {
-    alert(payment["_id"] + " is going to be deleted");
+    alert(payment["_id"] + " is going to be edited");
     console.log("Edit payment clicked for ID:", payment.id);
   }
 
   deletePayment(payment: any) {
-    alert(payment["_id"] + " is going to be deleted");
-    console.log("Delete payment clicked for ID:", payment.id);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: "375px",
+      panelClass: "my-dialog-class",
+      data: {
+        message: "Are you sure you want to delete this record?",
+        id: payment["_id"]
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == true) {
+        this.paymentService.deletePaymentDataById(payment["_id"]).subscribe({
+          next: (result: any) => {
+            if (result["status"] == 200) {
+              this.snackbar.open('Record deleted successfully', 'Dismiss', {
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+                panelClass: ['my-snackbar-class']
+              });
+              this.fetchPaymentList();
+
+            }
+          },
+          error: (error: any) => {
+            this.paymentData = [];
+            console.error("Error fetching data:", error);
+          }
+        });
+      }
+    });
   }
 
 }
