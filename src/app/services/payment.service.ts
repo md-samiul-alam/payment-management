@@ -7,14 +7,26 @@ import { catchError, tap, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl: string = 'http://localhost:8000/payment?limit=20&skip=20';
+  private apiDomain: string = 'http://localhost:8000';
 
   constructor(private http: HttpClient) {
     console.log('inside service constructor')
   }
 
-  getData(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl)
+  getPaymentData(): Observable<any[]> {
+    let route = '/payment?limit=20&skip=20';
+    let finalUrl = this.apiDomain + route;
+    return this.http.get<any[]>(finalUrl)
+      .pipe(
+        tap(data => console.log('Data fetched:', data)),
+        catchError(this.handleError)
+      );
+  }
+
+  getPaymentDataById(id: string): Observable<any[]> {
+    let route = '/payment/' + id;
+    let finalUrl = this.apiDomain + route;
+    return this.http.get<any[]>(finalUrl)
       .pipe(
         tap(data => console.log('Data fetched:', data)),
         catchError(this.handleError)

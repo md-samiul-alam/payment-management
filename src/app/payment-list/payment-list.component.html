@@ -1,5 +1,5 @@
 <div *ngIf="loading">Loading data...</div>
-<div *ngIf="error">{{error}}</div>
+<div *ngIf="error">{{ error }}</div>
 <p *ngIf="paymentData.length === 0 && !loading && !error">No data available.</p>
 <table *ngIf="paymentData.length > 0">
   <thead>
@@ -7,11 +7,6 @@
       <th>Name</th>
       <th>Email</th>
       <th>Phone Number</th>
-      <th>Address</th>
-      <th>City</th>
-      <th>Province/State</th>
-      <th>Postal/Zip Code</th>
-      <th>Country</th>
       <th>Added Date</th>
       <th>Due Date</th>
       <th>Due Amount</th>
@@ -25,35 +20,30 @@
   </thead>
   <tbody>
     <tr *ngFor="let payment of paymentData">
-      <td>{{payment['payee_last_name']}}, {{payment['payee_first_name']}}</td>
-      <td>{{payment['payee_email']}}</td>
-      <td>{{payment['payee_phone_number']}}</td>
-      <td>{{payment['payee_address_line_1']}}, {{payment['payee_address_line_2']}}</td>
-      <td>{{payment['payee_city']}}</td>
-      <td>{{payment['payee_province_or_state']}}</td>
-      <td>{{payment['payee_postal_code']}}</td>
-      <td>{{payment['payee_country']}}</td>
-      <td>{{payment['payee_added_date_utc']}}</td>
-      <td>{{payment['payee_due_date']}}</td>
-      <td>{{payment['discount_percent']}}</td>
-      <td>{{payment['tax_percent']}}</td>
-      <td>{{payment['due_amount']}}</td>
-      <td>{{payment['total_due']}}</td>
-      <td>{{payment['currency']}}</td>
-      <td>{{payment['payee_payment_status']}}</td>
+      <td>{{ payment['payee_last_name'] }}, {{ payment['payee_first_name'] }}</td>
+      <td>{{ payment['payee_email'] }}</td>
+      <td>{{ payment['payee_phone_number'] }}</td>
+      <td>{{ payment['payee_added_date_utc'] }}</td>
+      <td>{{ payment['payee_due_date'] }}</td>
+      <td>{{ payment['discount_percent'] }}</td>
+      <td>{{ payment['tax_percent'] }}</td>
+      <td>{{ payment['due_amount'] }}</td>
+      <td>{{ payment['total_due'] }}</td>
+      <td>{{ payment['currency'] }}</td>
+      <td>{{ payment['payee_payment_status'] }}</td>
       <td>
-        <button title="Edit this payment" class="action-button" mat-mini-fab>
+        <button title="Edit this payment" class="action-button" mat-mini-fab (click)="editPayment(payment)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button title="Delete this payment" class="action-button delete-button" mat-mini-fab>
+        <button title="Delete this payment" class="action-button delete-button" mat-mini-fab
+          (click)="editPayment(payment)">
           <mat-icon>delete</mat-icon>
         </button>
-        <button title="View user profile" class="action-button profile-button" mat-mini-fab>
+        <button title="View user profile" class="action-button profile-button" mat-mini-fab
+          (click)="viewUserProfile(payment)">
           <mat-icon>account_box</mat-icon>
         </button>
       </td>
     </tr>
   </tbody>
 </table>
-
-<p *ngIf="paymentData.length === 0">No data available.</p>
