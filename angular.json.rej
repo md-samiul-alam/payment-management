@@ -1,0 +1,9 @@
+diff a/angular.json b/angular.json	(rejected hunks)
+@@ -13,6 +13,7 @@
+         "build": {
+           "builder": "@angular-devkit/build-angular:application",
+           "options": {
++            "baseHref": "/payment-management/",
+             "outputPath": "dist/payment-management",
+             "index": "src/index.html",
+             "browser": "src/main.ts",
