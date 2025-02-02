@@ -23,7 +23,7 @@ tr:nth-child(even) {
   background-color: white;
   margin: 1ex;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
+  border-radius: 5px;
 }
 
 .delete-button {
