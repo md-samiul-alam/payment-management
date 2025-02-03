@@ -14,6 +14,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatRippleModule } from '@angular/material/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 import { ViewUserDialogComponent } from '../view-user-dialog/view-user-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
@@ -36,6 +38,7 @@ import { skip } from 'rxjs';
     MatRippleModule,
     MatPaginator,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './payment-list.component.html',
   styleUrl: './payment-list.component.css'
@@ -57,6 +60,8 @@ export class PaymentListComponent implements OnInit {
     'payment-status',
     'action'
   ];
+
+  loading: boolean = false;
 
   paginationLength = 100;
   startIndex = 0;
@@ -116,8 +121,10 @@ export class PaymentListComponent implements OnInit {
 
   fetchPaymentList() {
     const filterPayLoad = this.preparePaymentSearchCriteria();
+    this.loading = true;
     this.paymentService.getPaymentData(filterPayLoad).subscribe({
       next: (data: any) => {
+        this.loading = false;
         this.paginationLength = data.count;
         this.paymentData = data.payments;
         this.paymentData.forEach(payment => {
@@ -125,6 +132,7 @@ export class PaymentListComponent implements OnInit {
         });
       },
       error: (error) => {
+        this.loading = false;
         this.paymentData = [];
         console.error("Error fetching data:", error);
       }
@@ -145,8 +153,10 @@ export class PaymentListComponent implements OnInit {
 
   applyFilters() {
     const filterPayLoad = this.preparePaymentSearchCriteria();
+    this.loading = true;
     this.paymentService.getPaymentData(filterPayLoad).subscribe({
       next: (data: any) => {
+        this.loading = false;
         this.paginationLength = data.count;
         this.paymentData = data.payments;
         this.paymentData.forEach(payment => {
@@ -154,6 +164,7 @@ export class PaymentListComponent implements OnInit {
         });
       },
       error: (error) => {
+        this.loading = false;
         this.paymentData = [];
         console.error("Error fetching data:", error);
       }
