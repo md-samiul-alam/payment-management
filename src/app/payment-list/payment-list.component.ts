@@ -86,9 +86,13 @@ export class PaymentListComponent implements OnInit {
     this.fetchPaymentList();
   }
 
-  openPaymentForm() {
+  openPaymentForm(mode: string, payment: object) {
     this.dialog.open(PaymentFormComponent, {
       width: "500px",
+      data: {
+        mode,
+        payment,
+      }
     });
   }
 
@@ -183,17 +187,9 @@ export class PaymentListComponent implements OnInit {
     console.log("Create new payment clicked");
   }
 
-  editPayment(payment: any) {
-    const dialogRef = this.dialog.open(PaymentFormComponent, {
-      width: "500px",
-      panelClass: "my-dialog-class",
-    });
-  }
-
   deletePayment(payment: any) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: "375px",
-      panelClass: "my-dialog-class",
       data: {
         message: "Are you sure you want to delete this record?",
         id: payment["_id"]
