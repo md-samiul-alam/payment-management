@@ -32,6 +32,12 @@ tr:nth-child(even) {
   border-radius: 5px;
 }
 
+.add-data-button {
+  background: rgb(149, 255, 149);
+  /* color: white; */
+  border-radius: 50%;
+}
+
 .delete-button {
   color: red;
 }
