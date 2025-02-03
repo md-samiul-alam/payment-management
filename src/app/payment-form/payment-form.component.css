@@ -1,0 +1,35 @@
+.form-dialog-class {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+}
+
+.form-group>div {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.form-group .form-field {
+  width: 100%;
+}
+
+@media (max-width: 500px) {
+  .form-group>div {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
