@@ -1,0 +1,56 @@
+/* form-wrapper styles */
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+}
+
+.form-wrapper>div {
+  /* Style each row of fields */
+  display: flex;
+  gap: 16px;
+  /* Spacing between fields in a row */
+  width: 100%;
+  /* Ensure rows take full width */
+}
+
+/* mat-form-field styles */
+.form-wrapper .form-field {
+  width: 100%;
+  /* Make form fields take full width of their container */
+}
+
+.form-wrapper .form-field .mat-form-field-label {
+  color: #555;
+  /* Slightly darker label color */
+}
+
+.form-wrapper .form-field .mat-input-element {
+  color: #333;
+  /* Darker input text color */
+}
+
+
+/* Optional: Style the select */
+.form-wrapper .mat-select {
+  width: 100%;
+}
+
+/* Responsive adjustments (example) */
+@media (max-width: 500px) {
+  .form-wrapper>div {
+    flex-direction: column;
+    /* Stack fields vertically on smaller screens */
+    gap: 8px;
+    /* Reduce gap between stacked fields */
+  }
+}
