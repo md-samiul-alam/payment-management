@@ -20,6 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ViewUserDialogComponent } from '../view-user-dialog/view-user-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { skip } from 'rxjs';
+import { PopupMessageComponent } from '../popup-message/popup-message.component';
 
 
 @Component({
@@ -177,8 +178,14 @@ export class PaymentListComponent implements OnInit {
   }
 
   editPayment(payment: any) {
-    alert(payment["_id"] + " is going to be edited");
-    console.log("Edit payment clicked for ID:", payment.id);
+    const dialogRef = this.dialog.open(PopupMessageComponent, {
+      width: "500px",
+      panelClass: "my-dialog-class",
+      data: {
+        message: "This feature is still under construction.",
+        id: payment["_id"]
+      },
+    });
   }
 
   deletePayment(payment: any) {
