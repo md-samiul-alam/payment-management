@@ -17,17 +17,17 @@ export class ConfirmationDialogComponent {
   public message: string = 'Are you sure?';
 
   constructor(
-    public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
+    public confirmDialog: MatDialogRef<ConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.message = data.message;
   }
 
   onYesClick() {
-    this.dialogRef.close(true);
+    this.confirmDialog.close(true);
   }
 
   onNoClick() {
-    this.dialogRef.close(false);
+    this.confirmDialog.close(false);
   }
 }
