@@ -12,8 +12,14 @@ export class PaymentService {
 
   constructor(private http: HttpClient) { }
 
+  getPaymentDataByFilter(payload: any) {
+    let params = this.convertToQueryParam(payload);
+    let route = `/payment?${params.toString()}`;
+    let finalUrl = this.apiDomain + route;
+    return this.http.get<any>(finalUrl, payload);
+  }
+
   getPaymentData(limit: number, skip: number): Observable<any[]> {
-    console.log(this.apiDomain);
     let route = `/payment?limit=${limit}&skip=${skip}`;
     let finalUrl = this.apiDomain + route;
     return this.http.get<any[]>(finalUrl);
@@ -31,13 +37,22 @@ export class PaymentService {
     return this.http.delete<any[]>(finalUrl);
   }
 
-  private handleError(error: HttpErrorResponse) {
-    if (error.status === 0) {
-      console.error("An error occurred:", error.message);
-    } else {
-      console.error(
-        `Backend returned code ${error.status}, body was: `, error.error);
+  private convertToQueryParam(payload: any) {
+    const params = new URLSearchParams();
+    for (const key in payload) {
+      if (payload.hasOwnProperty(key)) {
+        let value = payload[key];
+        if (value instanceof Date) {
+          value = value.toISOString();
+        }
+        else if (typeof value === 'object' && value !== null) {
+          value = JSON.stringify(value);
+        }
+        if (value !== undefined && value !== null) {
+          params.append(key, encodeURIComponent(String(value)));
+        }
+      }
     }
-    return throwError(() => new Error("Something bad happened; please try again later."));
+    return params;
   }
 }
