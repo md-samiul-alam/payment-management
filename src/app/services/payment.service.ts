@@ -12,17 +12,11 @@ export class PaymentService {
 
   constructor(private http: HttpClient) { }
 
-  getPaymentDataByFilter(payload: any) {
+  getPaymentData(payload: any) {
     let params = this.convertToQueryParam(payload);
     let route = `/payment?${params.toString()}`;
     let finalUrl = this.apiDomain + route;
     return this.http.get<any>(finalUrl, payload);
-  }
-
-  getPaymentData(limit: number, skip: number): Observable<any[]> {
-    let route = `/payment?limit=${limit}&skip=${skip}`;
-    let finalUrl = this.apiDomain + route;
-    return this.http.get<any[]>(finalUrl);
   }
 
   getPaymentDataById(id: string): Observable<any[]> {

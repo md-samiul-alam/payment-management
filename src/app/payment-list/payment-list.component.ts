@@ -103,8 +103,20 @@ export class PaymentListComponent implements OnInit {
     this.fetchPaymentList();
   }
 
+  private preparePaymentSearchCriteria() {
+    return {
+      "limit": this.pageSize,
+      "skip": this.startIndex,
+      "payee_first_name": this.firstName,
+      "payee_last_name": this.lastName,
+      "payee_due_date_s": this.dueDateStart,
+      "payee_due_date_e": this.dueDateEnd,
+    }
+  }
+
   fetchPaymentList() {
-    this.paymentService.getPaymentData(this.pageSize, this.startIndex).subscribe({
+    const filterPayLoad = this.preparePaymentSearchCriteria();
+    this.paymentService.getPaymentData(filterPayLoad).subscribe({
       next: (data: any) => {
         this.paginationLength = data.count;
         this.paymentData = data.payments;
@@ -119,7 +131,7 @@ export class PaymentListComponent implements OnInit {
     });
   }
 
-  sanitizePaymentObj(payment: any) {
+  private sanitizePaymentObj(payment: any) {
     payment["payee_added_date_utc"] = new Date(payment["payee_added_date_utc"]["_Timestamp__inc"] * 1000)
       .toLocaleDateString();
     payment["payee_due_date"] = new Date(payment["payee_due_date"])
@@ -132,15 +144,8 @@ export class PaymentListComponent implements OnInit {
   }
 
   applyFilters() {
-    let filterPayLoad = {
-      "limit": this.pageSize,
-      "skip": this.startIndex,
-      "payee_first_name": this.firstName,
-      "payee_last_name": this.lastName,
-      "payee_due_date_s": this.dueDateStart,
-      "payee_due_date_e": this.dueDateEnd,
-    }
-    this.paymentService.getPaymentDataByFilter(filterPayLoad).subscribe({
+    const filterPayLoad = this.preparePaymentSearchCriteria();
+    this.paymentService.getPaymentData(filterPayLoad).subscribe({
       next: (data: any) => {
         this.paginationLength = data.count;
         this.paymentData = data.payments;
