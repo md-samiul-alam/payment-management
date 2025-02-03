@@ -28,14 +28,19 @@
           <mat-datepicker #pickerEnd class="date-picker"></mat-datepicker>
         </mat-form-field>
       </div>
-
-      <button mat-fab mat-ripple matRippleColor="#f9f9f9" extended class="search-button" (click)="applyFilters()">
-        <mat-icon>search</mat-icon>
-        Search
-      </button>
+      <div class="button-spinner-wrapper">
+        <button mat-fab mat-ripple matRippleColor="#f9f9f9" extended class="search-button" (click)="applyFilters()">
+          <mat-icon>search</mat-icon>
+          Search
+        </button>
+        <mat-spinner diameter="50" *ngIf="loading"></mat-spinner>
+      </div>
     </mat-expansion-panel>
   </mat-accordion>
 </div>
+
+
+
 
 <mat-paginator [length]="paginationLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
   aria-label="Select page" (page)="onPageChange($event)">
