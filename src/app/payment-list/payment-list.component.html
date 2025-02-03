@@ -135,3 +135,9 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+<ng-container *ngIf="loading">
+  <div class="page-loading-spinner">
+    <p>Data is loading...</p>
+    <mat-spinner diameter="50" *ngIf="true"></mat-spinner>
+  </div>
+</ng-container>
