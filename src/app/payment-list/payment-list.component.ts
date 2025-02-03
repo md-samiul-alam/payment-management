@@ -17,6 +17,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { ViewUserDialogComponent } from '../view-user-dialog/view-user-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { skip } from 'rxjs';
 
 
 @Component({
@@ -63,7 +64,11 @@ export class PaymentListComponent implements OnInit {
   pageSizeOptions: number[] = [5, 10, 25, 100];
 
   paymentData: any[] = [];
-  firstName: any;
+
+  firstName = "";
+  lastName = "";
+  dueDateStart = null;
+  dueDateEnd = null;
 
   constructor(
     private paymentService: PaymentService,
@@ -127,8 +132,27 @@ export class PaymentListComponent implements OnInit {
   }
 
   applyFilters() {
-    // Implement filter functions here
-    console.log("Implement filter functions here");
+    let filterPayLoad = {
+      "limit": this.pageSize,
+      "skip": this.startIndex,
+      "payee_first_name": this.firstName,
+      "payee_last_name": this.lastName,
+      "payee_due_date_s": this.dueDateStart,
+      "payee_due_date_e": this.dueDateEnd,
+    }
+    this.paymentService.getPaymentDataByFilter(filterPayLoad).subscribe({
+      next: (data: any) => {
+        this.paginationLength = data.count;
+        this.paymentData = data.payments;
+        this.paymentData.forEach(payment => {
+          payment = this.sanitizePaymentObj(payment);
+        });
+      },
+      error: (error) => {
+        this.paymentData = [];
+        console.error("Error fetching data:", error);
+      }
+    });
   }
 
   createNewPayment() {
