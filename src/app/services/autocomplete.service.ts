@@ -7,6 +7,10 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class AutoCompleteService {
+  getAddressData() {
+    let finalUrl = 'https://countriesnow.space/api/v0.1/countries/states';
+    return this.http.get<any>(finalUrl);
+  }
   private apiDomain: string = environment.apiDomain;
 
   constructor(private http: HttpClient) { }

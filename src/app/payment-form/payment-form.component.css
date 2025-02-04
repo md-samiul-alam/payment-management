@@ -27,6 +27,13 @@
   width: 100%;
 }
 
+.navigation-button-container {
+  margin: 10px;
+  display: flex;
+  justify-content: end;
+  gap: 16px;
+}
+
 @media (max-width: 500px) {
   .form-group>div {
     flex-direction: column;
