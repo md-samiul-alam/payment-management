@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Inject, inject, ViewChild } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +10,15 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { PopupMessageComponent } from '../popup-message/popup-message.component';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { AutoCompleteService } from '../services/autocomplete.service';
+import { CommonModule } from '@angular/common';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+
+interface Currency {
+  name: string,
+  currency: string,
+  iso3: string,
+}
 
 @Component({
   selector: 'app-payment-form',
@@ -22,11 +31,16 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
     FormsModule,
     ReactiveFormsModule,
     MatDatepickerModule,
+    CommonModule,
+    MatAutocompleteModule,
   ],
   templateUrl: './payment-form.component.html',
   styleUrl: './payment-form.component.css'
 })
 export class PaymentFormComponent {
+  currencies: Currency[] = [];
+  filteredCurrencies: Currency[] = [];
+
   firstFormGroup: FormGroup = new FormGroup({
     firstName: new FormControl(""),
     lastName: new FormControl("", [Validators.required]),
@@ -50,13 +64,28 @@ export class PaymentFormComponent {
   constructor(
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private autoCompleteService: AutoCompleteService,
   ) {
     if (data.mode == 'edit') {
       this.loadFormData(data.payment);
     }
     else if (data.mode == 'create') {
-      // do nothing
+      this.loadFormAutoComplete();
     }
+  }
+
+  loadFormAutoComplete() {
+    this.autoCompleteService.getCurrencyData().subscribe({
+      next: (result: any) => {
+        this.currencies = result.data;
+        this.filteredCurrencies = result.data;
+
+      },
+      error: (error: any) => {
+        this.currencies = [];
+        console.error("Error fetching data:", error);
+      }
+    });
   }
 
   loadFormData(payment: any) {
@@ -83,4 +112,13 @@ export class PaymentFormComponent {
       },
     });
   }
+
+  filter(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const filterValue = inputElement.value.toLowerCase();
+    this.filteredCurrencies = this.currencies.filter(o => {
+      return (o.currency.toLowerCase().includes(filterValue) || o.name.toLowerCase().includes(filterValue))
+    });
+  }
 }
+
