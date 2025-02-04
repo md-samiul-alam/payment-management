@@ -19,6 +19,11 @@
           <mat-form-field class="form-field">
             <mat-label>Email</mat-label>
             <input matInput formControlName="email" required>
+            <mat-error
+              *ngIf="firstFormGroup.get('email')?.invalid && (firstFormGroup.get('email')?.dirty || firstFormGroup.get('email')?.touched)">
+              <span *ngIf="firstFormGroup.get('email')?.errors?.['required']">Email is required</span>
+              <span *ngIf="firstFormGroup.get('email')?.errors?.['email']">Not a valid email</span>
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -55,17 +60,19 @@
         </div>
 
         <div>
-          <mat-form-field class="form-field">
+          <mat-form-field class="form-field state-field">
             <mat-label>State/Province</mat-label>
             <input #stateInput type="text" matInput [matAutocomplete]="stateAutoComplete" (input)="filterStates($event)"
-              (focus)="filterStates($event)" formControlName="state" required>
-            <mat-autocomplete requireSelection #stateAutoComplete="matAutocomplete">
+              (focus)="filterStates($event)" formControlName="state">
+            <mat-autocomplete #stateAutoComplete="matAutocomplete">
               @for (state of filteredStates; track state['state_code']) {
-              <mat-option [value]="state['state_code']">{{state['name']}}</mat-option>
+              <mat-option [value]="state['name']">{{state['name']}}</mat-option>
               }
             </mat-autocomplete>
           </mat-form-field>
+        </div>
 
+        <div>
           <mat-form-field class="form-field">
             <mat-label>Country</mat-label>
             <input #countryInput type="text" matInput [matAutocomplete]="countryAutoComplete"

@@ -64,7 +64,7 @@ export class PaymentFormComponent {
   firstFormGroup: FormGroup = new FormGroup({
     firstName: new FormControl(""),
     lastName: new FormControl("", [Validators.required]),
-    email: new FormControl("", [Validators.required]),
+    email: new FormControl("", [Validators.required, Validators.email]),
     phoneNo: new FormControl(""),
     addrsLine1: new FormControl("", [Validators.required]),
     addrsLine2: new FormControl(""),
