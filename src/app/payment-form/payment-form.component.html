@@ -56,23 +56,24 @@
 
         <div>
           <mat-form-field class="form-field">
-            <mat-label>Country</mat-label>
-            <input #stateInput type="text" matInput [matAutocomplete]="auto" (input)="filterCountries($event)"
-              (focus)="filterCountries($event)" formControlName="state" required>
-            <mat-autocomplete requireSelection #auto="matAutocomplete">
-              @for (state of filteredStates; track state['name']) {
-              <mat-option [value]="state['name']">{{state['name']}}</mat-option>
+            <mat-label>State/Province</mat-label>
+            <input #stateInput type="text" matInput [matAutocomplete]="stateAutoComplete" (input)="filterStates($event)"
+              (focus)="filterStates($event)" formControlName="state" required>
+            <mat-autocomplete requireSelection #stateAutoComplete="matAutocomplete">
+              @for (state of filteredStates; track state['state_code']) {
+              <mat-option [value]="state['state_code']">{{state['name']}}</mat-option>
               }
             </mat-autocomplete>
           </mat-form-field>
 
           <mat-form-field class="form-field">
             <mat-label>Country</mat-label>
-            <input #countryInput type="text" matInput [matAutocomplete]="auto" (input)="filterCountries($event)"
-              (focus)="filterCountries($event)" formControlName="country" required>
-            <mat-autocomplete requireSelection #auto="matAutocomplete">
-              @for (country of filteredCountries; track country['name']) {
-              <mat-option [value]="country['name']">{{country['name']}}</mat-option>
+            <input #countryInput type="text" matInput [matAutocomplete]="countryAutoComplete"
+              (input)="filterCountries($event)" (focus)="filterCountries($event)" formControlName="country" required>
+            <mat-autocomplete requireSelection #countryAutoComplete="matAutocomplete"
+              (optionSelected)="onCountrySelected($event)">
+              @for (country of filteredCountries; track country['index']) {
+              <mat-option [value]="country['iso3']">{{country['name']}} ({{country['iso3']}})</mat-option>
               }
             </mat-autocomplete>
           </mat-form-field>
@@ -97,10 +98,10 @@
         <div>
           <mat-form-field class="form-field">
             <mat-label>Currency</mat-label>
-            <input #currencyInput type="text" matInput [matAutocomplete]="auto" (input)="filterCurrenies($event)"
-              (focus)="filterCurrenies($event)" required>
-            <mat-autocomplete requireSelection #auto="matAutocomplete">
-              @for (currency of filteredCurrencies; track currency['name']) {
+            <input #currencyInput type="text" matInput [matAutocomplete]="currencyAutoComplete"
+              (input)="filterCurrenies($event)" (focus)="filterCurrenies($event)" required>
+            <mat-autocomplete requireSelection #currencyAutoComplete="matAutocomplete">
+              @for (currency of filteredCurrencies; track currency['index']) {
               <mat-option [value]="currency['currency']">{{currency['name']}} ({{currency['currency']}})</mat-option>
               }
             </mat-autocomplete>
