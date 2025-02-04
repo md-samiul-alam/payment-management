@@ -151,9 +151,8 @@ export class PaymentListComponent implements OnInit {
   }
 
   private sanitizePaymentObj(payment: any) {
-    payment["payee_added_date_utc"] = this.formatDate(new Date(payment["payee_added_date_utc"]["_Timestamp__inc"] * 1000));
-    payment["payee_due_date"] = new Date(payment["payee_due_date"])
-      .toLocaleDateString();
+    payment["payee_added_date_utc"] = this.formatAddedDate(new Date(payment["payee_added_date_utc"]["_Timestamp__inc"] * 1000));
+    payment["payee_due_date"] = this.formatDueDate(new Date(payment["payee_due_date"]));
     payment["discount_percent"] = payment["discount_percent"].toFixed(2);
     payment["tax_percent"] = payment["tax_percent"].toFixed(2);
     payment["due_amount"] = payment["due_amount"].toFixed(2);
