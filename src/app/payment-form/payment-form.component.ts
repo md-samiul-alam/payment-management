@@ -12,20 +12,23 @@ import { PopupMessageComponent } from '../popup-message/popup-message.component'
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AutoCompleteService } from '../services/autocomplete.service';
 import { CommonModule } from '@angular/common';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 interface State {
+  index: number;
   name: string;
-  iso3: string;
+  state_code: string;
 }
 
 interface Country {
+  index: number;
   name: string,
   iso3: string,
   states: State[],
 }
 
 interface Currency {
+  index: number;
   name: string,
   currency: string,
   iso3: string,
@@ -94,19 +97,19 @@ export class PaymentFormComponent {
   loadFormAutoComplete() {
     this.autoCompleteService.getAddressData().subscribe({
       next: (result: any) => {
-        this.countries = result.data;
-        this.filteredCountries = result.data;
+        this.countries = this.addIndexToArrayElements(result.data);
+        this.filteredCountries = this.countries;
       },
       error: (error: any) => {
-        this.currencies = [];
+        this.countries = [];
         console.error("Error fetching data:", error);
       }
     });
 
     this.autoCompleteService.getCurrencyData().subscribe({
       next: (result: any) => {
-        this.currencies = result.data;
-        this.filteredCurrencies = result.data;
+        this.currencies = this.addIndexToArrayElements(result.data);
+        this.filteredCurrencies = [];
 
       },
       error: (error: any) => {
@@ -114,6 +117,19 @@ export class PaymentFormComponent {
         console.error("Error fetching data:", error);
       }
     });
+  }
+
+  onCountrySelected(event: MatAutocompleteSelectedEvent) {
+    const selectedCountry = event.option.value;
+    this.states = [];
+    this.filteredStates = [];
+
+    for (let country of this.filteredCountries) {
+      if (country.iso3 == selectedCountry) {
+        this.states = country.states;
+        this.filteredStates = country.states;
+      }
+    }
   }
 
   loadFormData(payment: any) {
@@ -141,12 +157,22 @@ export class PaymentFormComponent {
     });
   }
 
+  filterStates(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const filterValue = inputElement.value.toLowerCase();
+    this.filteredStates = this.states.filter(o => {
+      return (o.name.toLowerCase().includes(filterValue) || o.state_code.toLowerCase().includes(filterValue))
+    });
+  }
+
   filterCountries(event: Event): void {
+    this.firstFormGroup.patchValue({ state: '' });
     const inputElement = event.target as HTMLInputElement;
     const filterValue = inputElement.value.toLowerCase();
     this.filteredCountries = this.countries.filter(o => {
       return (o.name.toLowerCase().includes(filterValue) || o.iso3.toLowerCase().includes(filterValue))
     });
+    console.log(this.filteredCountries)
   }
 
   filterCurrenies(event: Event): void {
@@ -155,6 +181,15 @@ export class PaymentFormComponent {
     this.filteredCurrencies = this.currencies.filter(o => {
       return (o.currency.toLowerCase().includes(filterValue) || o.name.toLowerCase().includes(filterValue))
     });
+    console.log(this.filteredCurrencies)
+  }
+
+  addIndexToArrayElements(array: any[]) {
+    let i = 0;
+    array.forEach(element => {
+      element.index = i++;
+    });
+    return array;
   }
 }
 
