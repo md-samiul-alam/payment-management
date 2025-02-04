@@ -151,10 +151,8 @@ export class PaymentListComponent implements OnInit {
   }
 
   private sanitizePaymentObj(payment: any) {
-    payment["payee_added_date_utc"] = new Date(payment["payee_added_date_utc"]["_Timestamp__inc"] * 1000)
-      .toLocaleDateString();
-    payment["payee_due_date"] = new Date(payment["payee_due_date"])
-      .toLocaleDateString();
+    payment["payee_added_date_utc"] = this.formatAddedDate(new Date(payment["payee_added_date_utc"]["_Timestamp__inc"] * 1000));
+    payment["payee_due_date"] = this.formatDueDate(new Date(payment["payee_due_date"]));
     payment["discount_percent"] = payment["discount_percent"].toFixed(2);
     payment["tax_percent"] = payment["tax_percent"].toFixed(2);
     payment["due_amount"] = payment["due_amount"].toFixed(2);
@@ -218,6 +216,26 @@ export class PaymentListComponent implements OnInit {
         });
       }
     });
+  }
+
+  formatAddedDate(date: Date) {
+    const dateStr = this.formatDueDate(date);
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12 || 12;
+
+    return `${dateStr}, ${hours}:${minutes} ${ampm}`;
+  }
+
+  formatDueDate(date: Date) {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    return `${month} ${day}, ${year}`;
   }
 
 }
