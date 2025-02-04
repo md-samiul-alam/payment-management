@@ -28,14 +28,19 @@
           <mat-datepicker #pickerEnd class="date-picker"></mat-datepicker>
         </mat-form-field>
       </div>
-
-      <button mat-fab mat-ripple matRippleColor="#f9f9f9" extended class="search-button" (click)="applyFilters()">
-        <mat-icon>search</mat-icon>
-        Search
-      </button>
+      <div class="button-spinner-wrapper">
+        <button mat-fab mat-ripple matRippleColor="#f9f9f9" extended class="search-button" (click)="applyFilters()">
+          <mat-icon>search</mat-icon>
+          Search
+        </button>
+        <mat-spinner diameter="50" *ngIf="loading"></mat-spinner>
+      </div>
     </mat-expansion-panel>
   </mat-accordion>
 </div>
+
+
+
 
 <mat-paginator [length]="paginationLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
   aria-label="Select page" (page)="onPageChange($event)">
@@ -44,7 +49,12 @@
 
 <table mat-table [dataSource]="paymentData" class="mat-elevation-z8">
   <ng-container matColumnDef="view-profile">
-    <th mat-header-cell *matHeaderCellDef></th>
+    <th mat-header-cell *matHeaderCellDef>
+      <button title="Add new data" class="action-button add-data-button" mat-mini-fab
+        (click)="openPaymentForm('create', {})">
+        <mat-icon>library_add</mat-icon>
+      </button>
+    </th>
     <td mat-cell *matCellDef="let payment">
       <button title="View user profile" class="action-button profile-button" mat-mini-fab
         (click)="viewUserProfile(payment)">
@@ -111,7 +121,8 @@
   <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef> </th>
     <td mat-cell *matCellDef="let payment">
-      <button title="Edit this payment" class="action-button" mat-mini-fab (click)="editPayment(payment)">
+      <button title="Edit this payment" class="action-button" mat-mini-fab
+        (click)="this.openPaymentForm('edit', payment)">
         <mat-icon>edit</mat-icon>
       </button>
       <button title="Delete this payment" class="action-button delete-button" mat-mini-fab
@@ -124,3 +135,9 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+<ng-container *ngIf="loading">
+  <div class="page-loading-spinner">
+    <p>Data is loading...</p>
+    <mat-spinner diameter="50" *ngIf="true"></mat-spinner>
+  </div>
+</ng-container>

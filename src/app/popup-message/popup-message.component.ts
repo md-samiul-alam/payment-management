@@ -5,29 +5,20 @@ import { MatCardModule } from '@angular/material/card';
 
 
 @Component({
-  selector: 'app-confirmation-dialog',
+  selector: 'app-popup-message',
   imports: [
     MatButtonModule,
     MatCardModule,
   ],
-  templateUrl: './confirmation-dialog.component.html',
-  styleUrl: './confirmation-dialog.component.css'
+  templateUrl: './popup-message.component.html',
+  styleUrl: './popup-message.component.css'
 })
-export class ConfirmationDialogComponent {
-  public message: string = 'Are you sure?';
-
+export class PopupMessageComponent {
+  message: string;
   constructor(
-    public confirmDialog: MatDialogRef<ConfirmationDialogComponent>,
+    public dialogRef: MatDialogRef<PopupMessageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.message = data.message;
-  }
-
-  onYesClick() {
-    this.confirmDialog.close(true);
-  }
-
-  onNoClick() {
-    this.confirmDialog.close(false);
   }
 }

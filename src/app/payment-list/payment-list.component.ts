@@ -14,10 +14,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatRippleModule } from '@angular/material/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 import { ViewUserDialogComponent } from '../view-user-dialog/view-user-dialog.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
-import { skip } from 'rxjs';
+import { PaymentFormComponent } from '../payment-form/payment-form.component';
+import { PopupMessageComponent } from '../popup-message/popup-message.component';
 
 
 @Component({
@@ -36,6 +39,7 @@ import { skip } from 'rxjs';
     MatRippleModule,
     MatPaginator,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './payment-list.component.html',
   styleUrl: './payment-list.component.css'
@@ -58,6 +62,8 @@ export class PaymentListComponent implements OnInit {
     'action'
   ];
 
+  loading: boolean = false;
+
   paginationLength = 100;
   startIndex = 0;
   pageSize = 5;
@@ -78,6 +84,16 @@ export class PaymentListComponent implements OnInit {
 
   ngOnInit() {
     this.fetchPaymentList();
+  }
+
+  openPaymentForm(mode: string, payment: object) {
+    this.dialog.open(PaymentFormComponent, {
+      width: "500px",
+      data: {
+        mode,
+        payment,
+      }
+    });
   }
 
   viewUserProfile(payment: any) {
@@ -116,8 +132,10 @@ export class PaymentListComponent implements OnInit {
 
   fetchPaymentList() {
     const filterPayLoad = this.preparePaymentSearchCriteria();
+    this.loading = true;
     this.paymentService.getPaymentData(filterPayLoad).subscribe({
       next: (data: any) => {
+        this.loading = false;
         this.paginationLength = data.count;
         this.paymentData = data.payments;
         this.paymentData.forEach(payment => {
@@ -125,6 +143,7 @@ export class PaymentListComponent implements OnInit {
         });
       },
       error: (error) => {
+        this.loading = false;
         this.paymentData = [];
         console.error("Error fetching data:", error);
       }
@@ -132,10 +151,8 @@ export class PaymentListComponent implements OnInit {
   }
 
   private sanitizePaymentObj(payment: any) {
-    payment["payee_added_date_utc"] = new Date(payment["payee_added_date_utc"]["_Timestamp__inc"] * 1000)
-      .toLocaleDateString();
-    payment["payee_due_date"] = new Date(payment["payee_due_date"])
-      .toLocaleDateString();
+    payment["payee_added_date_utc"] = this.formatAddedDate(new Date(payment["payee_added_date_utc"]["_Timestamp__inc"] * 1000));
+    payment["payee_due_date"] = this.formatDueDate(new Date(payment["payee_due_date"]));
     payment["discount_percent"] = payment["discount_percent"].toFixed(2);
     payment["tax_percent"] = payment["tax_percent"].toFixed(2);
     payment["due_amount"] = payment["due_amount"].toFixed(2);
@@ -145,8 +162,10 @@ export class PaymentListComponent implements OnInit {
 
   applyFilters() {
     const filterPayLoad = this.preparePaymentSearchCriteria();
+    this.loading = true;
     this.paymentService.getPaymentData(filterPayLoad).subscribe({
       next: (data: any) => {
+        this.loading = false;
         this.paginationLength = data.count;
         this.paymentData = data.payments;
         this.paymentData.forEach(payment => {
@@ -154,6 +173,7 @@ export class PaymentListComponent implements OnInit {
         });
       },
       error: (error) => {
+        this.loading = false;
         this.paymentData = [];
         console.error("Error fetching data:", error);
       }
@@ -165,15 +185,9 @@ export class PaymentListComponent implements OnInit {
     console.log("Create new payment clicked");
   }
 
-  editPayment(payment: any) {
-    alert(payment["_id"] + " is going to be edited");
-    console.log("Edit payment clicked for ID:", payment.id);
-  }
-
   deletePayment(payment: any) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: "375px",
-      panelClass: "my-dialog-class",
       data: {
         message: "Are you sure you want to delete this record?",
         id: payment["_id"]
@@ -202,6 +216,26 @@ export class PaymentListComponent implements OnInit {
         });
       }
     });
+  }
+
+  formatAddedDate(date: Date) {
+    const dateStr = this.formatDueDate(date);
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12 || 12;
+
+    return `${dateStr}, ${hours}:${minutes} ${ampm}`;
+  }
+
+  formatDueDate(date: Date) {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    return `${month} ${day}, ${year}`;
   }
 
 }

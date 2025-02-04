@@ -1,3 +1,15 @@
+.page-loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-spinner-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
 .filter-container {
   margin: 1em;
 }
@@ -24,6 +36,12 @@ tr:nth-child(even) {
   margin: 1ex;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
+}
+
+.add-data-button {
+  background: rgb(149, 255, 149);
+  /* color: white; */
+  border-radius: 50%;
 }
 
 .delete-button {

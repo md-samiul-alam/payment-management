@@ -1,0 +1,165 @@
+<div class="form-dialog-class">
+  <mat-stepper #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup" class="form-group">
+        <ng-template matStepLabel>Fill out payee information</ng-template>
+        <div>
+          <mat-form-field class="form-field">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName">
+          </mat-form-field>
+
+          <mat-form-field class="form-field">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" required>
+            <mat-error
+              *ngIf="firstFormGroup.get('lastName')?.invalid && (firstFormGroup.get('lastName')?.dirty || firstFormGroup.get('lastName')?.touched)">
+              Last name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="form-field">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" required>
+            <mat-error
+              *ngIf="firstFormGroup.get('email')?.invalid && (firstFormGroup.get('email')?.dirty || firstFormGroup.get('email')?.touched)">
+              <span *ngIf="firstFormGroup.get('email')?.errors?.['required']">Email is required</span>
+              <span *ngIf="firstFormGroup.get('email')?.errors?.['email']">Not a valid email</span>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="form-field">
+            <mat-label>Phone No</mat-label>
+            <input matInput formControlName="phoneNo">
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="form-field">
+            <mat-label>Address Line 1</mat-label>
+            <input matInput formControlName="addrsLine1" required>
+            <mat-error
+              *ngIf="firstFormGroup.get('addrsLine1')?.invalid && (firstFormGroup.get('addrsLine1')?.dirty || firstFormGroup.get('addrsLine1')?.touched)">
+              Address line 1 is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="form-field">
+            <mat-label>Address Line 2</mat-label>
+            <input matInput formControlName="addrsLine2">
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="form-field">
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" required>
+            <mat-error
+              *ngIf="firstFormGroup.get('city')?.invalid && (firstFormGroup.get('city')?.dirty || firstFormGroup.get('city')?.touched)">
+              City is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="form-field">
+            <mat-label>Postal Code</mat-label>
+            <input matInput formControlName="postalCode" required>
+            <mat-error
+              *ngIf="firstFormGroup.get('postalCode')?.invalid && (firstFormGroup.get('postalCode')?.dirty || firstFormGroup.get('postalCode')?.touched)">
+              Postal code is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="form-field state-field">
+            <mat-label>State/Province</mat-label>
+            <input #stateInput type="text" matInput [matAutocomplete]="stateAutoComplete" (input)="filterStates($event)"
+              (focus)="filterStates($event)" formControlName="state">
+            <mat-autocomplete #stateAutoComplete="matAutocomplete">
+              @for (state of filteredStates; track state['state_code']) {
+              <mat-option [value]="state['name']">{{state['name']}}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="form-field">
+            <mat-label>Country</mat-label>
+            <input #countryInput type="text" matInput [matAutocomplete]="countryAutoComplete"
+              (input)="filterCountries($event)" (focus)="filterCountries($event)" formControlName="country" required>
+            <mat-error
+              *ngIf="firstFormGroup.get('country')?.invalid && (firstFormGroup.get('country')?.dirty || firstFormGroup.get('country')?.touched)">
+              Country is required is required
+            </mat-error>
+            <mat-autocomplete requireSelection #countryAutoComplete="matAutocomplete"
+              (optionSelected)="onCountrySelected($event)">
+              @for (country of filteredCountries; track country['index']) {
+              <mat-option [value]="country['iso3']">{{country['name']}} ({{country['iso3']}})</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </form>
+
+      <div class="navigation-button-container">
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </mat-step>
+
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup" class="form-group">
+        <ng-template matStepLabel>Fill out payment information</ng-template>
+
+        <div>
+          <mat-form-field class="form-field">
+            <mat-label>Due Amount</mat-label>
+            <input matInput type="number" required>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="form-field">
+            <mat-label>Currency</mat-label>
+            <input #currencyInput type="text" matInput [matAutocomplete]="currencyAutoComplete"
+              (input)="filterCurrenies($event)" (focus)="filterCurrenies($event)" required>
+            <mat-autocomplete requireSelection #currencyAutoComplete="matAutocomplete">
+              @for (currency of filteredCurrencies; track currency['index']) {
+              <mat-option [value]="currency['currency']">{{currency['name']}} ({{currency['currency']}})</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="form-field">
+            <mat-label>Due Date</mat-label>
+            <input matInput [matDatepicker]="picker">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field class="form-field">
+            <mat-label>Discount (%)</mat-label>
+            <input type="number" matInput>
+          </mat-form-field>
+          <mat-form-field class="form-field">
+            <mat-label>Tax (%)</mat-label>
+            <input type="number" matInput>
+          </mat-form-field>
+        </div>
+      </form>
+
+      <div class="navigation-button-container">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="saveFormData()">Save</button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</div>
