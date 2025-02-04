@@ -53,6 +53,7 @@
             <input matInput formControlName="postalCode" required>
           </mat-form-field>
         </div>
+
         <div>
           <mat-form-field class="form-field">
             <mat-label>State/Province</mat-label>
@@ -61,13 +62,7 @@
 
           <mat-form-field class="form-field">
             <mat-label>Country</mat-label>
-            <mat-select formControlName="country" required>
-              <mat-option value="CA">CA</mat-option>
-              <mat-option value="US">US</mat-option>
-              <mat-option value="UK">UK</mat-option>
-              <mat-option value="AU">AU</mat-option>
-              <mat-option value="NZ">NZ</mat-option>
-            </mat-select>
+            <input formControlName="country" matInput>
           </mat-form-field>
         </div>
       </form>
@@ -89,26 +84,16 @@
           </mat-form-field>
         </div>
         <div>
-
           <mat-form-field class="form-field">
             <mat-label>Currency</mat-label>
             <input #currencyInput type="text" placeholder="Pick one" matInput [matAutocomplete]="auto"
-              (input)="filter($event)" (focus)="filter($event)">
+              (input)="filter($event)" (focus)="filter($event)" required>
             <mat-autocomplete requireSelection #auto="matAutocomplete">
               @for (currency of filteredCurrencies; track currency['name']) {
               <mat-option [value]="currency['currency']">{{currency['name']}} ({{currency['currency']}})</mat-option>
               }
             </mat-autocomplete>
           </mat-form-field>
-
-          <!-- <mat-form-field class="form-field">
-            <mat-label>Currency</mat-label>
-            <mat-select required>
-              <mat-option *ngFor="let currency of currencies;" value="{{currency['currency']}}">
-                {{currency['name']}} ({{currency['currency']}})
-              </mat-option>
-            </mat-select>
-          </mat-form-field> -->
         </div>
         <div>
           <mat-form-field class="form-field">
