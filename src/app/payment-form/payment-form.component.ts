@@ -14,6 +14,17 @@ import { AutoCompleteService } from '../services/autocomplete.service';
 import { CommonModule } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
+interface State {
+  name: string;
+  iso3: string;
+}
+
+interface Country {
+  name: string,
+  iso3: string,
+  states: State[],
+}
+
 interface Currency {
   name: string,
   currency: string,
@@ -38,6 +49,12 @@ interface Currency {
   styleUrl: './payment-form.component.css'
 })
 export class PaymentFormComponent {
+  countries: Country[] = [];
+  filteredCountries: Country[] = [];
+
+  states: State[] = [];
+  filteredStates: State[] = [];
+
   currencies: Currency[] = [];
   filteredCurrencies: Currency[] = [];
 
@@ -49,7 +66,7 @@ export class PaymentFormComponent {
     addrsLine1: new FormControl("", [Validators.required]),
     addrsLine2: new FormControl(""),
     city: new FormControl("", [Validators.required]),
-    province: new FormControl(""),
+    state: new FormControl(""),
     country: new FormControl("", [Validators.required]),
     postalCode: new FormControl("", [Validators.required]),
   });
@@ -75,6 +92,17 @@ export class PaymentFormComponent {
   }
 
   loadFormAutoComplete() {
+    this.autoCompleteService.getAddressData().subscribe({
+      next: (result: any) => {
+        this.countries = result.data;
+        this.filteredCountries = result.data;
+      },
+      error: (error: any) => {
+        this.currencies = [];
+        console.error("Error fetching data:", error);
+      }
+    });
+
     this.autoCompleteService.getCurrencyData().subscribe({
       next: (result: any) => {
         this.currencies = result.data;
@@ -97,7 +125,7 @@ export class PaymentFormComponent {
       addrsLine1: payment['payee_address_line_1'],
       addrsLine2: payment['payee_address_line_2'],
       city: payment['payee_city'],
-      province: payment['payee_province_or_state'],
+      state: payment['payee_province_or_state'],
       country: payment['payee_country'],
       postalCode: payment['payee_postal_code'],
     };
@@ -113,7 +141,15 @@ export class PaymentFormComponent {
     });
   }
 
-  filter(event: Event): void {
+  filterCountries(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const filterValue = inputElement.value.toLowerCase();
+    this.filteredCountries = this.countries.filter(o => {
+      return (o.name.toLowerCase().includes(filterValue) || o.iso3.toLowerCase().includes(filterValue))
+    });
+  }
+
+  filterCurrenies(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     const filterValue = inputElement.value.toLowerCase();
     this.filteredCurrencies = this.currencies.filter(o => {
